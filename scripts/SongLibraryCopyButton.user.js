@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Song Library Copy Button
-// @version      1.1
+// @version      1.2
 // @description  Adds a copy button to the song library
 // @author       LeoCx1000
 // @match        https://*.animemusicquiz.com/*
@@ -13,7 +13,7 @@
 // @updateURL    https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyButton.user.js
 // ==/UserScript==
 
-const version = '1.1';
+const version = '1.2';
 
 if (typeof Listener === "undefined") return;
 const loadInterval = setInterval(() => {
@@ -82,8 +82,8 @@ function createSettingsWindow() {
     copyButtonSettingsWindow = new AMQWindow({
         id: qname('SettingsWindow'),
         title: "Library Copy Button Settings",
-        width: 850,
-        height: 450,
+        width: 450,
+        height: 475,
         minWidth: 100,
         minHeight: 100,
         zIndex: 375,
@@ -98,8 +98,8 @@ function createSettingsWindow() {
         width: 1.0,
     }).append($(`<div class="${qname("ReadMeText")}">
         <code>{anime}</code>: Anime name as seen in the interface.<br>
-        <code>{category}</code>: Anime category. Such as TV, Season 1.0, etc.<br>
-        <code>{year}</code>: anime release year.
+        <code>{category}</code>: Anime category like: TV, Season 1.0, etc.<br>
+        <code>{year}</code>: anime release year.<br>
         <code>{nameJP}</code>: Anime name in japanese.<br>
         <code>{nameEN}</code>: Anime name in english.<br>
     </div>`))
@@ -171,7 +171,7 @@ function createSettingsWindow() {
         id: qname("SongPlaceholders"),
         width: 1.0,
     }).append($(`<div class="${qname("ReadMeText")}">
-        The placeholders above can also be used here. 
+        The <b>placeholders above</b> can also be used here.<br> 
         The follwing are also available:<br>
         <code>{song}</code>: The song name.<br>
         <code>{artist}</code>: The song artist(s).<br>
