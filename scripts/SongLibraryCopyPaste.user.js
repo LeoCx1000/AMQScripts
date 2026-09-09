@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Song Library Copy Paste
-// @version      1.0
+// @version      1.1
 // @description  Adds CopyPaste to the Song Library
 // @author       LeoCx1000
 // @match        https://*.animemusicquiz.com/*
@@ -13,7 +13,7 @@
 // @updateURL    https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyPaste.user.js
 // ==/UserScript==
 
-const version = '1.0';
+const version = '1.1';
 
 if (typeof Listener === "undefined") return;
 const loadInterval = setInterval(() => {
@@ -83,10 +83,10 @@ function createSettingsWindow() {
         id: qname('SettingsWindow'),
         title: "Library Copy Paste Settings",
         width: 850,
-        height: 550,
+        height: 450,
         minWidth: 100,
         minHeight: 100,
-        zIndex: 400,
+        zIndex: 375,
         resizable: true,
         draggable: true
     })
