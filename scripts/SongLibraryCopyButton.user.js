@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Song Library Copy Button
-// @version      1.2
+// @version      1.3
 // @description  Adds a copy button to the song library
 // @author       LeoCx1000
 // @match        https://*.animemusicquiz.com/*
@@ -13,7 +13,7 @@
 // @updateURL    https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyButton.user.js
 // ==/UserScript==
 
-const version = '1.2';
+const version = '1.3';
 
 if (typeof Listener === "undefined") return;
 const loadInterval = setInterval(() => {
@@ -248,12 +248,20 @@ function createSettingsWindow() {
 
 function createSongLibraryButtons() {
     AMQ_LibraryAddAnimePatch(qname("animeEntry"), (entry) => {
-        let copyButton = $(`<div class="${qname('CopyButton')}">C</div>`)
-            .popover({
-                content: "Copy Anime Name",
-                trigger: "hover",
-                container: "#gameContainer",
-            })
+
+        // For some reason, this method gets called multiple times when stuff is typed in the search bar.
+        // Even the class constructor for Song Entry. I have no idea why AMQ is coded like this. 
+        let copyButton = entry.$addCustomListButton.parent().parent().find(qname('CopyButton', '.'))
+        if (!copyButton.length) {
+            copyButton = $(`<div class="${qname('CopyButton')}">C</div>`)
+            entry.$addCustomListButton.parent().before($(`<div class="elAnimeEntryAddCustomListContianer"></div>`).append(copyButton))
+        }
+
+        copyButton.popover({
+            content: "Copy Anime Name",
+            trigger: "hover",
+            container: "#gameContainer",
+        })
             .click((e) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -267,7 +275,6 @@ function createSongLibraryButtons() {
 
                 copy(format(config.copyAnimeTemplateText, validKeys))
             })
-        entry.$addCustomListButton.parent().before($(`<div class="elAnimeEntryAddCustomListContianer"></div>`).append(copyButton))
     })
 
     AMQ_LibraryAddSongPatch(qname("songEntry"), (entry) => {

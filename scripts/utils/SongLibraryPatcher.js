@@ -26,21 +26,13 @@ function ensureLibPatch() {
 
             setup(...args) {
                 super.setup(...args)
-
-                if (!this.$rawBody.find(".calledPatches").length)
-                    this.$rawBody.append($(`<div class="calledPatches" style="display: none;"></div>`))
-
-                let calledPatches = this.$rawBody.find(".calledPatches");
-
                 for (let patchName in this.patches) {
-                    if (!calledPatches.find(`.${patchName}`).length)
-                        try {
-                            this.patches[patchName](this)
-                            calledPatches.append($(`<div class="${patchName}"></div>`))
-                        }
-                        catch (error) {
-                            console.error(`Failed calling Song Entry patch ${patchName}`)
-                        }
+                    try {
+                        this.patches[patchName](this)
+                    }
+                    catch (error) {
+                        console.error(`Failed calling Song Entry patch ${patchName}`)
+                    }
                 }
             }
 
@@ -62,20 +54,13 @@ function ensureLibPatch() {
 
             setup(...args) {
                 super.setup(...args)
-
-                if (!this.$rawBody.find(".calledPatches").length)
-                    this.$rawBody.append($(`<div class="calledPatches" style="display: none;"></div>`))
-
-                let calledPatches = this.$rawBody.find(".calledPatches");
                 for (let patchName in this.patches) {
-                    if (!calledPatches.find(`.${patchName}`).length)
-                        try {
-                            this.patches[patchName](this)
-                            calledPatches.append($(`<div class="${patchName}"></div>`))
-                        }
-                        catch (error) {
-                            console.error(`Failed calling Song Entry patch ${patchName}`)
-                        }
+                    try {
+                        this.patches[patchName](this)
+                    }
+                    catch (error) {
+                        console.error(`Failed calling Song Entry patch ${patchName}`)
+                    }
                 }
             }
         }
