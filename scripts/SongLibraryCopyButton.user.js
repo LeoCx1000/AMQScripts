@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Song Library Copy Paste
+// @name         Song Library Copy Button
 // @version      1.1
-// @description  Adds CopyPaste to the Song Library
+// @description  Adds a copy button to the song library
 // @author       LeoCx1000
 // @match        https://*.animemusicquiz.com/*
 // @icon         https://leo.might-be.gay/static/graphics/favicon.svg
@@ -9,8 +9,8 @@
 // @require      https://github.com/joske2865/AMQ-Scripts/raw/master/common/amqScriptInfo.js
 // @require      https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/utils/AMQWindows.js
 // @require      https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/utils/SongLibraryPatcher.js
-// @downloadURL  https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyPaste.user.js
-// @updateURL    https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyPaste.user.js
+// @downloadURL  https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyButton.user.js
+// @updateURL    https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyButton.user.js
 // ==/UserScript==
 
 const version = '1.1';
@@ -34,9 +34,9 @@ defaultConfig = {
     copyAnimeTemplateText: "{anime}",
     copySongTemplateText: '"{song}" by {artist}'
 }
-let CopyPasteSettingsWindow;
-let animeCopyPasteTextBox;
-let songCopyPasteTextBox;
+let copyButtonSettingsWindow;
+let animeCopyTextBox;
+let songCopyTextBox;
 
 
 function loadConfig() {
@@ -79,9 +79,9 @@ function format(text, mapping) {
 };
 
 function createSettingsWindow() {
-    CopyPasteSettingsWindow = new AMQWindow({
+    copyButtonSettingsWindow = new AMQWindow({
         id: qname('SettingsWindow'),
-        title: "Library Copy Paste Settings",
+        title: "Library Copy Button Settings",
         width: 850,
         height: 450,
         minWidth: 100,
@@ -91,9 +91,9 @@ function createSettingsWindow() {
         draggable: true
     })
 
-    // Anime Name Copy Paste
+    // Anime Name Copy Button
 
-    CopyPasteSettingsWindow.addPanel({
+    copyButtonSettingsWindow.addPanel({
         id: qname("AnimePlaceholders"),
         width: 1.0,
     }).append($(`<div class="${qname("ReadMeText")}">
@@ -114,7 +114,7 @@ function createSettingsWindow() {
 
     function checkAnimeInput() {
         let invalidMatches = [];
-        for (let match of (animeCopyPasteTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1))) {
+        for (let match of (animeCopyButtonTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1))) {
             if (!validAnimeKeys.includes(match)) {
                 invalidMatches.push(match)
             }
@@ -126,13 +126,13 @@ function createSettingsWindow() {
                 animeErrorTextBox.text('')
             }
 
-            if (animeCopyPasteTextBox.val() !== config.copyAnimeTemplateText) {
-                if (!animeCopyPasteTextBox.hasClass(qname('unsavedChanges')))
-                    animeCopyPasteTextBox.addClass(qname('unsavedChanges'))
+            if (animeCopyButtonTextBox.val() !== config.copyAnimeTemplateText) {
+                if (!animeCopyButtonTextBox.hasClass(qname('unsavedChanges')))
+                    animeCopyButtonTextBox.addClass(qname('unsavedChanges'))
                 if (!animeErrorTextBox.hasClass(qname('unsavedChangesWarning')))
                     animeErrorTextBox.addClass(qname('unsavedChangesWarning'))
             } else {
-                animeCopyPasteTextBox.removeClass(qname('unsavedChanges'))
+                animeCopyButtonTextBox.removeClass(qname('unsavedChanges'))
                 animeErrorTextBox.removeClass(qname('unsavedChangesWarning'))
             }
 
@@ -141,33 +141,33 @@ function createSettingsWindow() {
     }
 
     let animeErrorTextBox = $(`<div class="${qname("errorBox")}"></div>`);
-    let animeCopyPasteTextBox = $(`<input class="${qname('TextBox')}" type="text" placeholder="Song Name Copy Format">`)
+    let animeCopyButtonTextBox = $(`<input class="${qname('TextBox')}" type="text" placeholder="Song Name Copy Format">`)
         .on('input', checkAnimeInput)
         .click(() => {
             quiz.setInputInFocus(false);
         })
         .val(config.copyAnimeTemplateText)
 
-    let animeCopyPasteSubmitButton = $(
+    let animeCopyButtonSubmitButton = $(
         `<button class="btn btn-success ${qname('ConfirmButton')}" type="button"><i aria-hidden="true" class="fa fa-check"></i></button>`
     ).click(() => {
 
-        for (let match of (animeCopyPasteTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1)))
+        for (let match of (animeCopyButtonTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1)))
             if (!validSongKeys.includes(match)) return
-        config.copyAnimeTemplateText = animeCopyPasteTextBox.val();
+        config.copyAnimeTemplateText = animeCopyButtonTextBox.val();
         saveConfig()
         checkAnimeInput()
     })
 
-    CopyPasteSettingsWindow.addPanel({
+    copyButtonSettingsWindow.addPanel({
         id: qname("AnimeTextBox"),
         width: 1.0,
-    }).append(animeCopyPasteTextBox).append(animeCopyPasteSubmitButton)
-    CopyPasteSettingsWindow.addPanel().append(animeErrorTextBox)
+    }).append(animeCopyButtonTextBox).append(animeCopyButtonSubmitButton)
+    copyButtonSettingsWindow.addPanel().append(animeErrorTextBox)
 
-    // Song Name Copy Paste
+    // Song Name Copy Button
 
-    CopyPasteSettingsWindow.addPanel({
+    copyButtonSettingsWindow.addPanel({
         id: qname("SongPlaceholders"),
         width: 1.0,
     }).append($(`<div class="${qname("ReadMeText")}">
@@ -194,7 +194,7 @@ function createSettingsWindow() {
 
     function checkSongInput() {
         let invalidMatches = [];
-        for (let match of (songCopyPasteTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1))) {
+        for (let match of (songCopyButtonTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1))) {
             if (!validSongKeys.includes(match)) {
                 invalidMatches.push(match)
             }
@@ -205,13 +205,13 @@ function createSettingsWindow() {
                 songErrorTextBox.text('')
             }
 
-            if (songCopyPasteTextBox.val() !== config.copySongTemplateText) {
-                if (!songCopyPasteTextBox.hasClass(qname('unsavedChanges')))
-                    songCopyPasteTextBox.addClass(qname('unsavedChanges'))
+            if (songCopyButtonTextBox.val() !== config.copySongTemplateText) {
+                if (!songCopyButtonTextBox.hasClass(qname('unsavedChanges')))
+                    songCopyButtonTextBox.addClass(qname('unsavedChanges'))
                 if (!songErrorTextBox.hasClass(qname('unsavedChangesWarning')))
                     songErrorTextBox.addClass(qname('unsavedChangesWarning'))
             } else {
-                songCopyPasteTextBox.removeClass(qname('unsavedChanges'))
+                songCopyButtonTextBox.removeClass(qname('unsavedChanges'))
                 songErrorTextBox.removeClass(qname('unsavedChangesWarning'))
 
             }
@@ -220,29 +220,29 @@ function createSettingsWindow() {
     }
 
     let songErrorTextBox = $(`<div class="${qname("errorBox")}"></div>`)
-    let songCopyPasteTextBox = $(`<input class="${qname('TextBox')}" type="text" placeholder="Anime Name Copy Format">`)
+    let songCopyButtonTextBox = $(`<input class="${qname('TextBox')}" type="text" placeholder="Anime Name Copy Format">`)
         .on('input', checkSongInput)
         .click(() => {
             quiz.setInputInFocus(false);
         })
         .val(config.copySongTemplateText)
 
-    let songCopyPasteSubmitButton = $(
+    let songCopyButtonSubmitButton = $(
         `<button class="btn btn-success ${qname('ConfirmButton')}" type="button"><i aria-hidden="true" class="fa fa-check"></i></button>`
     ).click(() => {
-        for (let match of (songCopyPasteTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1)))
+        for (let match of (songCopyButtonTextBox.val().match(/{(\w+)}/g) || []).map((v) => v.slice(1, -1)))
             if (!validSongKeys.includes(match)) return
 
-        config.copySongTemplateText = songCopyPasteTextBox.val();
+        config.copySongTemplateText = songCopyButtonTextBox.val();
         saveConfig()
         checkSongInput()
     })
 
-    CopyPasteSettingsWindow.addPanel({
+    copyButtonSettingsWindow.addPanel({
         id: qname("SongTextBox"),
         width: 1.0,
-    }).append(songCopyPasteTextBox).append(songCopyPasteSubmitButton)
-    CopyPasteSettingsWindow.addPanel().append(songErrorTextBox)
+    }).append(songCopyButtonTextBox).append(songCopyButtonSubmitButton)
+    copyButtonSettingsWindow.addPanel().append(songErrorTextBox)
 
 }
 
@@ -307,7 +307,7 @@ function createSongLibraryButtons() {
             $(`<div class="elFilterViewOption rightTiltButton clickAble"><div>Copy Settings</div></div>`)
                 .click(
                     () => {
-                        CopyPasteSettingsWindow.open()
+                        copyButtonSettingsWindow.open()
                     }
                 )
         )
@@ -374,7 +374,7 @@ function setup() {
         name: "Song Library Copy Button",
         author: 'LeoCx1000',
         version: version,
-        link: 'https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyPaste.user.js',
+        link: 'https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyButton.user.js',
         description: `
             <p>Adds a copy button for songs in the song library. <img src="https://leo.might-be.gay/JTcE8dKK.png" /></p>
             
