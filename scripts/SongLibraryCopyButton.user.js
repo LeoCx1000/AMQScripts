@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Song Library Copy Button
-// @version      1.3
+// @version      1.4
 // @description  Adds a copy button to the song library
 // @author       LeoCx1000
 // @match        https://*.animemusicquiz.com/*
@@ -13,7 +13,7 @@
 // @updateURL    https://github.com/LeoCx1000/AMQScripts/raw/master/scripts/SongLibraryCopyButton.user.js
 // ==/UserScript==
 
-const version = '1.3';
+const version = '1.4';
 
 if (typeof Listener === "undefined") return;
 const loadInterval = setInterval(() => {
@@ -253,7 +253,7 @@ function createSongLibraryButtons() {
         // Even the class constructor for Song Entry. I have no idea why AMQ is coded like this. 
         let copyButton = entry.$addCustomListButton.parent().parent().find(qname('CopyButton', '.'))
         if (!copyButton.length) {
-            copyButton = $(`<div class="${qname('CopyButton')}">C</div>`)
+            copyButton = $(`<div class="${qname('CopyButton')} fa fa-files-o"></div>`)
             entry.$addCustomListButton.parent().before($(`<div class="elAnimeEntryAddCustomListContianer"></div>`).append(copyButton))
         }
 
@@ -278,7 +278,7 @@ function createSongLibraryButtons() {
     })
 
     AMQ_LibraryAddSongPatch(qname("songEntry"), (entry) => {
-        let copyButton = $(`<div class="${qname('CopyButton')}">C</div>`)
+        let copyButton = $(`<div class="${qname('CopyButton')} fa fa-files-o"></div>`)
             .popover({
                 content: "Copy Song Name",
                 trigger: "hover",
@@ -357,13 +357,9 @@ function applyCSS() {
             font-style: italic;
         }
         .${qname('CopyButton')} {
-            font-size: 20px;
             line-height: 18px;
-            aspect-ratio: 1/1;
             height: 20px;
             text-align: center;
-            border-radius: 50%;
-            border: 1px solid white;
             opacity: .6;
             cursor: pointer;
         }
